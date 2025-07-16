@@ -51,6 +51,22 @@ class StoryMenuState extends MusicBeatState
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
+		
+		#if DISCORD_ALLOWED
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("In Story Mode", null);
+		#end
+			
+		if(WeekData.weeksList.length < 1)
+		{
+			FlxTransitionableState.skipNextTransIn = true;
+			persistentUpdate = false;
+			MusicBeatState.switchState(new states.ErrorState("NO WEEKS ADDED FOR STORY MODE\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
+				function() MusicBeatState.switchState(new states.editors.WeekEditorState()),
+				function() MusicBeatState.switchState(new states.MainMenuState())));
+			return;
+		}
+		
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
