@@ -338,14 +338,14 @@ class HScript extends Iris
 		}
 	}
 
-	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null): #if (SScript == "17.1.618") Tea #else TeaCall #end {
+	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):IrisCall {
 		if (funcToRun == null) return null;
 
 		if(!exists(funcToRun)) {
 			#if LUA_ALLOWED
-			FunkinLua.luaTrace(origin + ' - No HScript function named: $funcToRun', false, false, FlxColor.RED);
+			FunkinLua.luaTrace(origin + ' - No function named: $funcToRun', false, false, FlxColor.RED);
 			#else
-			PlayState.instance.addTextToDebug(origin + ' - No HScript function named: $funcToRun', FlxColor.RED);
+			PlayState.instance.addTextToDebug(origin + ' - No function named: $funcToRun', FlxColor.RED);
 			#end
 			return null;
 		}
