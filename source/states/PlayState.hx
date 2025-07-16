@@ -3294,6 +3294,7 @@ class PlayState extends MusicBeatState
 			var newScript:HScript = cast (Iris.instances.get(file), HScript);
 			if(newScript != null)
 				newScript.destroy();
+		}
 	}
 	#end
 
