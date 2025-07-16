@@ -3358,38 +3358,34 @@ class PlayState extends MusicBeatState
 
 		var len:Int = hscriptArray.length;
 		if (len < 1)
+			
 			return returnVal;
-		for(i in 0...len) {
-			var script:HScript = hscriptArray[i];
+		for(script in hscriptArray)
+		{
+			@:privateAccess
+
 			if(script == null || !script.exists(funcToCall) || exclusions.contains(script.origin))
 				continue;
 
-			var myValue:Dynamic = null;
-			try {
+			try
+			{
 				var callValue = script.call(funcToCall, args);
-				if(!callValue.succeeded)
-				{
-					var e = callValue.exceptions[0];
-					if(e != null)
-					{
-						var len:Int = e.message.indexOf('\n') + 1;
-						if(len <= 0) len = e.message.length;
-						addTextToDebug('ERROR (${callValue.calledFunction}) - ' + e.message.substr(0, len), FlxColor.RED);
-					}
-				}
-				else
-				{
-					myValue = callValue.returnValue;
-					if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops)
-					{
-						returnVal = myValue;
-						break;
-					}
+				var myValue:Dynamic = callValue.methodVal;
 
-					if(myValue != null && !excludeValues.contains(myValue))
-						returnVal = myValue;
-				}
+				// compiler fuckup fix
+				final stopHscript = myValue == LuaUtils.Function_StopHScript;
+				final stopAll = myValue == LuaUtils.Function_StopAll;
+				if((stopHscript || stopAll) && !excludeValues.contains(myValue) && !ignoreStops)
+					
+				{
+					returnVal = myValue;
+					break
+					}
+	
+				if(myValue != null && !excludeValues.contains(myValue))
+					returnVal = myValue;
 			}
+			
 		}
 		#end
 
@@ -3421,8 +3417,6 @@ class PlayState extends MusicBeatState
 			if(exclusions.contains(script.origin))
 				continue;
 
-			if(!instancesExclude.contains(variable))
-				instancesExclude.push(variable);
 			script.set(variable, arg);
 		}
 		#end
