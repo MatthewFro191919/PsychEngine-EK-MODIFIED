@@ -88,8 +88,20 @@ class HScript extends Iris
 			#end
 		}
 
+		var scriptThing:String = file;
+		if(parent == null && file != null)
+		{
+			var f:String = file.replace('\\', '/');
+			if(f.contains('/') && !f.contains('\n'))
+			{
+				scriptThing = File.getContent(f);
+			}
+		}
+		this.scriptStr = scriptThing;
+
 		preset();
 		execute();
+		this.varsToBring = varsToBring;
 	}
 
 	var varsToBring:Any = null;
@@ -313,7 +325,6 @@ class HScript extends Iris
 			set('addBehindGF', PlayState.instance.addBehindGF);
 			set('addBehindDad', PlayState.instance.addBehindDad);
 			set('addBehindBF', PlayState.instance.addBehindBF);
-			setSpecialObject(PlayState.instance, false, PlayState.instance.instancesExclude);
 		}
 
 		if(varsToBring != null) {
