@@ -3,6 +3,7 @@
 #if DISCORD_ALLOWED
 import backend.Discord;
 #end
+import flixel.addons.transition.FlxTransitionableState;
 
 //Psych
 #if LUA_ALLOWED
