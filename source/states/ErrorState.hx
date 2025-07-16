@@ -17,6 +17,11 @@ class ErrorState extends MusicBeatState
 
 	public var errorSine:Float = 0;
 	public var errorText:FlxText;
+
+	#if mobile
+		addVirtualPad(NONE, A_B);
+		#end
+		
 	override function create()
 	{
 		var bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -34,9 +39,6 @@ class ErrorState extends MusicBeatState
 		super.create();
 	}
 
-	#if mobile
-		addVirtualPad(NONE, A_B);
-		#end
 
 	override function update(elapsed:Float)
 	{
