@@ -3379,7 +3379,7 @@ class PlayState extends MusicBeatState
 					
 				{
 					returnVal = myValue;
-					break
+					break;
 					}
 	
 				if(myValue != null && !excludeValues.contains(myValue))
