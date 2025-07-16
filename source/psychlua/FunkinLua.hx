@@ -666,7 +666,7 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "mouseReleased", function(button:String) {
 			var released:Bool = FlxG.mouse.justReleased;
-			switch(button.trim().toLowerCase())
+			switch(button.trim().toLowerCase()) {
 				case 'middle':
 					released = FlxG.mouse.justReleasedMiddle;
 				case 'right':
