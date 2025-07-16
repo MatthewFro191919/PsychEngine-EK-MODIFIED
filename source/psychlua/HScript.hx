@@ -77,11 +77,12 @@ class HScript extends Iris
 		}
 		#end
 
-		if (scriptFile != null && scriptFile.length > 0)
+		filePath = file;
+		if (filePath != null && filePath.length > 0)
 		{
-			this.origin = scriptFile;
+			this.origin = filePath;
 			#if MODS_ALLOWED
-			var myFolder:Array<String> = scriptFile.split('/');
+			var myFolder:Array<String> = filePath.split('/');
 			if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
 			#end
