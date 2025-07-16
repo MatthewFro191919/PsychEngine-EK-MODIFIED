@@ -350,28 +350,20 @@ class HScript extends Iris
 			return null;
 		}
 
-		final callValue = call(funcToRun, funcArgs);
-		if (!callValue.succeeded)
+		try
 		{
-			final e = callValue.exceptions[0];
-			if (e != null) {
-				var msg:String = e.toString();
-				#if LUA_ALLOWED
-				if(parentLua != null)
-				{
-					FunkinLua.luaTrace('$origin: ${parentLua.lastCalledFunction} - $msg', false, false, FlxColor.RED);
-					return null;
-				}
-				#end
-				PlayState.instance.addTextToDebug('$origin - $msg', FlxColor.RED);
-			}
-			return null;
+			final callValue:IrisCall = call(funcToRun, funcArgs);
+			return callValue.methodVal;
 		}
-		return callValue;
+		catch(e:Dynamic)
+		{
+			trace('ERROR ${funcToRun}: $e');
+	}
+		return null;
 	}
 
-	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>): #if (SScript == "17.1.618") Tea #else TeaCall #end {
-		if (funcToRun == null) return null;
+	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):IrisCall {
+		if (funcToRun == null || !exists(funcToRun)) return null;
 		return call(funcToRun, funcArgs);
 	}
 
