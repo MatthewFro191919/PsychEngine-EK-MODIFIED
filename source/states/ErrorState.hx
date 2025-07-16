@@ -34,6 +34,10 @@ class ErrorState extends MusicBeatState
 		super.create();
 	}
 
+	#if mobile
+		addVirtualPad(NONE, A_B);
+		#end
+
 	override function update(elapsed:Float)
 	{
 		errorSine += 180 * elapsed;
