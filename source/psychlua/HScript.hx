@@ -43,9 +43,13 @@ class HScript extends Iris
 			parent.hscript = new HScript(parent, code, varsToBring);
 		}
 		else
+			hs.varsToBring = varsToBring;
 		{
 			try
 			{
+				hs.scriptStr = code;
+				hs.execute();
+			}
 			catch(e:Dynamic)
 			{
 				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
