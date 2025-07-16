@@ -3,24 +3,28 @@
 		{
 			"name": "hxcpp",
 			"type": "git",
-			"dir": null,
-			"ref": null,
-			"url": "https://github.com/th2l-devs/hxcpp"
+            		"dir": null,
+            		"ref": "main",
+            		"url": "https://github.com/kittycathy233/hxcpp"
 		},
 		{
 			"name": "lime",
-			"type": "haxelib",
-			"version": "8.1.2"
+			"type": "git",
+            		"dir": null,   
+            		"ref": "main",
+            		"url": "https://github.com/kittycathy233/lime"
 		},
 		{
 			"name": "openfl",
 			"type": "haxelib",
-			"version": "9.3.4"
+			"version": "9.3.2"
 		},
 		{
-			"name": "flixel",
-			"type": "haxelib",
-			"version": "5.8.0"
+		      "name": "flixel",
+		      "type": "git",
+		      "dir": null,
+		      "ref": "main",
+		      "url": "https://github.com/kittycathy233/flixel"
 		},
 		{
 			"name": "flixel-addons",
@@ -67,13 +71,11 @@
 			"url": "https://github.com/ShadowMario/flxanimate"
 		},
 		{
-			"name": "linc_luajit",
-                        "type": "git",
-                        "dir": null,
-                        "ref": null,
-                        "url": "https://github.com/th2l-devs/linc_luajit"
-		},
-		{
+                       "name": "linc_luajit",
+			"type": "git",
+			"dir": null,
+			"url": "https://github.com/kittycathy233/linc_luajit.git"
+        },
 			"name": "hxdiscord_rpc",
 			"type": "git",
 			"dir": null,
