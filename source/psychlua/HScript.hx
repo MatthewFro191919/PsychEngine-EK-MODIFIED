@@ -145,7 +145,7 @@ class HScript extends Iris
 		});
 		set('getVar', function(name:String) {
 			var result:Dynamic = null;
-			if(PlayState.instance.variables.exists(name)) result = MusicBeatState.getVariables().get(name);
+			if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
 			return result;
 		});
 		set('removeVar', function(name:String)
