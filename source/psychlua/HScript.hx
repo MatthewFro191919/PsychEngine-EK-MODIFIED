@@ -369,8 +369,8 @@ class HScript extends Iris
 
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua) {
-		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
-			#if SScript
+		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):IrisCall {
+			#if HSCRIPT_ALLOWED
 			initHaxeModuleCode(funk, codeToRun, varsToBring);
 			final retVal : #if (SScript == "17.1.618") Tea #else TeaCall #end = funk.hscript.executeCode(funcToRun, funcArgs);
 			if (retVal != null) {
