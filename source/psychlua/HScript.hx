@@ -44,11 +44,15 @@ class HScript extends Iris
 		}
 		else
 		{
-			hs.doString(code);
-			@:privateAccess
-			if(hs.parsingException != null)
+			try
 			{
 				PlayState.instance.addTextToDebug('ERROR ON LOADING (${hs.origin}): ${hs.parsingException.message}', FlxColor.RED);
+				hs.scriptStr = code;
+				hs.execute();
+			}
+			catch(e:Dynamic)
+			{
+				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
 			}
 		}
 	}
