@@ -45,7 +45,7 @@ class ErrorState extends MusicBeatState
 		errorSine += 180 * elapsed;
 		errorText.alpha = 1 - Math.sin((Math.PI * errorSine) / 180);
 
-		if(controls.ACCEPT && acceptCallback != null)
+		if(controls.ACCEPT && acceptCallback || #if mobile || _virtualpad.buttonA.justPressed #end != null)
 			acceptCallback();
 		else if(controls.BACK && backCallback != null)
 			backCallback();
