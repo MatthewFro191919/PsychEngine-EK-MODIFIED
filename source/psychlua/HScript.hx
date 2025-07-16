@@ -8,11 +8,19 @@ import psychlua.CustomSubstate;
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
 #end
-
+	
 #if HSCRIPT_ALLOWED
-import tea.SScript;
-class HScript extends SScript
+import crowplexus.iris.Iris;
+
+typedef IrisCall = {
+	var methodName:String;
+	var methodReturn:Dynamic;
+	var methodVal:Dynamic;
+};
+
+class HScript extends Iris
 {
+	public var filePath:String;
 	public var modFolder:String;
 
 	#if LUA_ALLOWED
