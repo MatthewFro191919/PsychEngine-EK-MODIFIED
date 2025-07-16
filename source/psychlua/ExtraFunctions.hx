@@ -180,14 +180,15 @@ class ExtraFunctions
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "deleteFile", function(path:String, ?ignoreModFolders:Bool = false)
+		Lua_helper.add_callback(lua, "deleteFile", function(path:String, ?ignoreModFolders:Bool = false, ?absolute:Bool = false)
 		{
 			try {
 				#if MODS_ALLOWED
 				if(!ignoreModFolders)
 				{
-					var lePath:String = Paths.modFolders(path);
-					if(FileSystem.exists(lePath))
+					var lePath:String = path;
+				if(!absolute) lePath = Paths.getPath(path, TEXT, !ignoreModFolders);
+				if(FileSystem.exists(lePath))
 					{
 						FileSystem.deleteFile(lePath);
 						return true;
