@@ -11,7 +11,7 @@
 			"name": "lime",
 			"type": "git",
 			"dir": null,
-			"ref": "develop",
+			"ref": null,
 			"url": "https://github.com/th2l-devs/lime"
 		},
 		{
@@ -59,7 +59,7 @@
                         "type": "git",
                         "dir": null,
                         "ref": "main",
-                        "url": "https://github.com/th2l-devs/SScript-7.7.0.git"
+                        "url": "https://github.com/th2l-devs/SScript"
                 },
 		{
 			"name": "flxanimate",
@@ -73,7 +73,7 @@
                         "type": "git",
                         "dir": null,
                         "ref": "main",
-                        "url": "https://github.com/th2l-devs/linc_luajit-rewriten.git"
+                        "url": "https://github.com/th2l-devs/linc_luajit"
 		},
 		{
 			"name": "hxdiscord_rpc",
