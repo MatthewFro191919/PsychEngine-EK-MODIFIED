@@ -2972,11 +2972,16 @@ class PlayState extends MusicBeatState
 					altAnim = '-alt';
 
 			var char:Character = dad;
-			var animToPlay:String = singAnimation(note.noteData) + altAnim;
+			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))] + note.animSuffix;
 			if(note.gfNote) char = gf;
 
 			if(char != null)
 			{
+				if(note.isSustainNote)
+				{
+					var holdAnim:String = animToPlay + '-hold';
+					if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
+				}
 				char.playAnim(animToPlay, true);
 				char.holdTimer = 0;
 			}
