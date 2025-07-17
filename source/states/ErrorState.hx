@@ -47,7 +47,7 @@ class ErrorState extends MusicBeatState
 
 		if(controls.ACCEPT #if mobile || _virtualpad.buttonA.justPressed #end && acceptCallback != null)
 			acceptCallback();
-		else if(controls.BACK && backCallback != null)
+		else if(controls.BACK #if mobile || _virtualpad.buttonB.justPressed #end && backCallback != null)
 			backCallback();
 
 		super.update(elapsed);
