@@ -21,6 +21,7 @@ typedef SwagSong =
 	var gfVersion:String;
 	var stage:String;
 	var format:String;
+	@:optional var mania:Int;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -86,26 +87,10 @@ class Song
 			}
 		}
 
-		var sectionsData:Array<SwagSection> = songJson.notes;
-		if(sectionsData == null) return;
-
-		for (section in sectionsData)
+		// fix mania being null (for non ek charts)
+		if (songJson.mania == null)
 		{
-			var beats:Null<Float> = cast section.sectionBeats;
-			if (beats == null || Math.isNaN(beats))
-			{
-				section.sectionBeats = 4;
-				if(Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');
-			}
-
-			for (note in section.sectionNotes)
-			{
-				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
-				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
-
-				if(note[3] != null && !Std.isOfType(note[3], String))
-					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
-			}
+			songJson.mania = 3;
 		}
 	}
 
