@@ -66,8 +66,8 @@ class LoadingState extends MusicBeatState
 		if (checkLoaded())
 		{
 			dontUpdate = true;
-			super.create();
 			onLoad();
+			super.create();
 			return;
 		}
 
@@ -130,8 +130,9 @@ class LoadingState extends MusicBeatState
 
 		if (!transitioning)
 		{
-			if (canChangeState && checkLoaded())
+			if(canChangeState && !finishedLoading && checkLoaded())
 			{
+				transitioning = true;
 				onLoad();
 				return;
 			}
@@ -218,7 +219,6 @@ class LoadingState extends MusicBeatState
 	
 	function onLoad()
 	{
-		if(finishedLoading) return;
 		
 		FlxG.camera.visible = false;
 		FlxTransitionableState.skipNextTransIn = true;
