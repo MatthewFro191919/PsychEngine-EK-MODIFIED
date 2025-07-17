@@ -23,6 +23,7 @@ class LoadingState extends MusicBeatState
 
 	static var requestedBitmaps:Map<String, BitmapData> = [];
 	static var mutex:Mutex = new Mutex();
+
 	function new(target:FlxState, stopMusic:Bool)
 	{
 		super();
@@ -65,8 +66,8 @@ class LoadingState extends MusicBeatState
 		if (checkLoaded())
 		{
 			dontUpdate = true;
-			onLoad();
 			super.create();
+			onLoad();
 			return;
 		}
 
@@ -129,9 +130,8 @@ class LoadingState extends MusicBeatState
 
 		if (!transitioning)
 		{
-			if(canChangeState && !finishedLoading && checkLoaded())
+			if (canChangeState && checkLoaded())
 			{
-				transitioning = true;
 				onLoad();
 				return;
 			}
@@ -213,21 +213,17 @@ class LoadingState extends MusicBeatState
 		}
 		#end
 	}
-
-	var finishedLoading:Bool = false;
 	
 	function onLoad()
 	{
-		
 		FlxG.camera.visible = false;
 		FlxTransitionableState.skipNextTransIn = true;
 
-	        transitioning = true;
+		transitioning = true;
 		imagesToPrepare = [];
 		soundsToPrepare = [];
 		musicToPrepare = [];
 		songsToPrepare = [];
-		finishedLoading = true;
 
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
@@ -321,7 +317,7 @@ class LoadingState extends MusicBeatState
 		preloadCharacter(player1, prefixVocals);
 		if (player2 != player1) preloadCharacter(player2, prefixVocals);
 		if (needsVoices) songsToPrepare.push(prefixVocals);
-		
+
 		if (!stageData.hide_girlfriend && gfVersion != player2 && gfVersion != player1)
 			preloadCharacter(gfVersion);
 	}
@@ -357,7 +353,6 @@ class LoadingState extends MusicBeatState
 		var useLibrary:Bool = library != null;
 		var i:Int = arr.length;
 		while (i-- > 0) {
-		{
 			var member:String = arr[i];
 			var remove:Bool = member.endsWith('/');
 			if (!remove) {
@@ -367,7 +362,6 @@ class LoadingState extends MusicBeatState
 					remove = !Paths.fileExists('$prefix/$member$ext', type, library);
 			}
 			if (remove) {
-			{
 				arr.remove(member);
 				trace('Removed invalid $prefix: $member');
 			}
@@ -395,7 +389,7 @@ class LoadingState extends MusicBeatState
 					#if MODS_ALLOWED
 					file = Paths.modsImages(image);
 					if (Paths.currentTrackedAssets.exists(file)) {
-				                mutex.release();
+						mutex.release();
 						loaded++;
 						return;
 					}
@@ -419,7 +413,7 @@ class LoadingState extends MusicBeatState
 							return;
 						}
 					}
-		mutex.release();
+					mutex.release();
 
 					if (bitmap != null) requestedBitmaps.set(file, bitmap);
 					else trace('oh no the image is null NOOOO ($image)');
@@ -438,8 +432,8 @@ class LoadingState extends MusicBeatState
 			mutex.acquire();
 			try {
 				var ret:Dynamic = func();
-			
-			mutex.release();
+				mutex.release();
+
 				if (ret != null) trace('finished preloading $traceData');
 				else trace('ERROR! fail on preloading $traceData');
 			}
