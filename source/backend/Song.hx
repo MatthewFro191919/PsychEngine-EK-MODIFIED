@@ -3,7 +3,6 @@ package backend;
 import haxe.Json;
 import lime.utils.Assets;
 
-import objects.Note;
 import backend.Section;
 
 typedef SwagSong =
@@ -14,13 +13,12 @@ typedef SwagSong =
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
-	var offset:Float;
 
 	var player1:String;
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-	var format:String;
+
 	@:optional var mania:Int;
 
 	@:optional var gameOverChar:String;
@@ -53,14 +51,13 @@ class Song
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
-	public var format:String = 'psych_v1';
 
-	public static function convert(songJson:Dynamic) // Convert old charts to psych_v1 format
+	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
 		if(songJson.gfVersion == null)
 		{
 			songJson.gfVersion = songJson.player3;
-			if(Reflect.hasField(songJson, 'player3')) Reflect.deleteField(songJson, 'player3');
+			songJson.player3 = null;
 		}
 
 		if(songJson.events == null)
@@ -94,68 +91,61 @@ class Song
 		}
 	}
 
-	public static var chartPath:String;
-	public static var loadedSongName:String;
-	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
+	public function new(song, notes, bpm)
 	{
-		if(folder == null) folder = jsonInput;
-		PlayState.SONG = getChart(jsonInput, folder);
-		loadedSongName = folder;
-		chartPath = _lastPath.replace('/', '\\');
-		StageData.loadDirectory(PlayState.SONG);
-		return PlayState.SONG;
+		this.song = song;
+		this.notes = notes;
+		this.bpm = bpm;
 	}
 
-	static var _lastPath:String;
-	public static function getChart(jsonInput:String, ?folder:String):SwagSong
+	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		if(folder == null) folder = jsonInput;
-		var rawData:String = null;
+		var rawJson = null;
 		
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
-		_lastPath = Paths.json('$formattedFolder/$formattedSong');
-
 		#if MODS_ALLOWED
-		if(FileSystem.exists(_lastPath))
-			rawData = File.getContent(_lastPath);
-		else
+		var moddyFile:String = Paths.modsJson('$formattedFolder/$formattedSong'); 
+		if(FileSystem.exists(moddyFile)) {
+			rawJson = File.getContent(moddyFile).trim();
+		}
 		#end
-			rawData = Assets.getText(_lastPath);
 
-		return rawData != null ? parseJSON(rawData, jsonInput) : null;
-	}
+		if(rawJson == null) {
+			var path:String = Paths.json('$formattedFolder/$formattedSong');
 
-	public static function parseJSON(rawData:String, ?nameForError:String = null, ?convertTo:String = 'psych_v1'):SwagSong
-	{
-		var songJson:SwagSong = cast Json.parse(rawData);
-		if(Reflect.hasField(songJson, 'song'))
-		{
-			var subSong:SwagSong = Reflect.field(songJson, 'song');
-			if(subSong != null && Type.typeof(subSong) == TObject)
-				songJson = subSong;
+			#if sys
+			if(FileSystem.exists(path))
+				rawJson = File.getContent(path);
+			else
+			#end
+				rawJson = Assets.getText(path);
 		}
 
-		if(convertTo != null && convertTo.length > 0)
-		{
-			var fmt:String = songJson.format;
-			if(fmt == null) fmt = songJson.format = 'unknown';
+		// FIX THE CASTING ON WINDOWS/NATIVE
+		// Windows???
+		// trace(songData);
 
-			switch(convertTo)
+		// trace('LOADED FROM JSON: ' + songData.notes);
+		/* 
+			for (i in 0...songData.notes.length)
 			{
-				case 'psych_v1':
-					if(!fmt.startsWith('psych_v1')) //Convert to Psych 1.0 format
-					{
-						trace('converting chart $nameForError with format $fmt to psych_v1 format...');
-						songJson.format = 'psych_v1_convert';
-						convert(songJson);
-					}
+				trace('LOADED FROM JSON: ' + songData.notes[i].sectionNotes);
+				// songData.notes[i].sectionNotes = songData.notes[i].sectionNotes
 			}
-		}
+
+				daNotes = songData.notes;
+				daSong = songData.song;
+				daBpm = songData.bpm; */
+
+		var songJson:Dynamic = parseJSONshit(rawJson);
+		if(jsonInput != 'events') StageData.loadDirectory(songJson);
+		onLoadJson(songJson);
 		return songJson;
 	}
-}
 
-/**
- * TO DO: V-Slice Chart Data here.
- */
+	public static function parseJSONshit(rawJson:String):SwagSong
+	{
+		return cast Json.parse(rawJson).song;
+	}
+}
