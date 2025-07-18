@@ -126,10 +126,7 @@ class MainMenuState extends MusicBeatState
 		super.create();
 
 		FlxG.camera.follow(camFollow, null, 9);
-		FlxG.mouse.visible = true;
 	}
-
-	
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite
 	{
@@ -155,19 +152,6 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (FlxG.mouse.justPressed)
-			{
-				if (FlxG.mouse.overlaps(menuItems))
-				{
-					menuItems.forEach(function(spr:FlxSprite)
-					{
-						if (FlxG.mouse.overlaps(spr))
-							curSelected = spr.ID;
-					});
-					selectedSomethin = true;
-				}
-			}
-			
 			if (controls.UI_UP_P #if mobile || _virtualpad.buttonUp.justPressed #end)
 				changeItem(-1);
 
