@@ -164,7 +164,7 @@ class MainMenuState extends MusicBeatState
 						if (FlxG.mouse.overlaps(spr))
 							curSelected = spr.ID;
 					});
-					selectItem();
+					selectedSomethin = true;
 				}
 			}
 			
