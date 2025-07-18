@@ -3,7 +3,6 @@ package backend;
 import haxe.Json;
 import lime.utils.Assets;
 
-import objects.Note;
 import backend.Section;
 
 typedef SwagSong =
@@ -14,13 +13,11 @@ typedef SwagSong =
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
-	var offset:Float;
 
 	var player1:String;
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-	var format:String;
 
 	@:optional var mania:Int;
 
@@ -54,14 +51,13 @@ class Song
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
-	public var format:String = 'psych_v1';
 
-	public static function convert(songJson:Dynamic) // Convert old charts to psych_v1 format
+	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
 		if(songJson.gfVersion == null)
 		{
 			songJson.gfVersion = songJson.player3;
-			if(Reflect.hasField(songJson, 'player3')) Reflect.deleteField(songJson, 'player3');
+			songJson.player3 = null;
 		}
 
 		if(songJson.events == null)
@@ -86,6 +82,7 @@ class Song
 					else i++;
 				}
 			}
+		}
 
 		// fix mania being null (for non ek charts)
 		if (songJson.mania == null)
@@ -94,73 +91,61 @@ class Song
 		}
 	}
 
-	var sectionsData:Array<SwagSection> = songJson.notes;
-		if(sectionsData == null) return;
-
-		for (section in sectionsData)
-		{
-			var beats:Null<Float> = cast section.sectionBeats;
-			if (beats == null || Math.isNaN(beats))
-			{
-				section.sectionBeats = 4;
-				if(Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');
-			}
-
-			for (note in section.sectionNotes)
-			{
-				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
-				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
-
-				if(note[3] != null && !Std.isOfType(note[3], String))
-					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
-			}
-		}
+	public function new(song, notes, bpm)
+	{
+		this.song = song;
+		this.notes = notes;
+		this.bpm = bpm;
 	}
 
-	public static var chartPath:String;
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		var rawData:String = null;
+		var rawJson = null;
 		
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
-		var path:String = Paths.json('$formattedFolder/$formattedSong');
 		#if MODS_ALLOWED
-		if(FileSystem.exists(path))
-			rawData = File.getContent(path);
-		else
-		#end
-			rawData = Assets.getText(path);
-
-		var songJson:SwagSong = parseJSON(rawData, jsonInput);
-		if(jsonInput != 'events')
-		{
-			StageData.loadDirectory(songJson);
-			chartPath = path.replace('/', '\\');
+		var moddyFile:String = Paths.modsJson('$formattedFolder/$formattedSong'); 
+		if(FileSystem.exists(moddyFile)) {
+			rawJson = File.getContent(moddyFile).trim();
 		}
+		#end
+
+		if(rawJson == null) {
+			var path:String = Paths.json('$formattedFolder/$formattedSong');
+
+			#if sys
+			if(FileSystem.exists(path))
+				rawJson = File.getContent(path);
+			else
+			#end
+				rawJson = Assets.getText(path);
+		}
+
+		// FIX THE CASTING ON WINDOWS/NATIVE
+		// Windows???
+		// trace(songData);
+
+		// trace('LOADED FROM JSON: ' + songData.notes);
+		/* 
+			for (i in 0...songData.notes.length)
+			{
+				trace('LOADED FROM JSON: ' + songData.notes[i].sectionNotes);
+				// songData.notes[i].sectionNotes = songData.notes[i].sectionNotes
+			}
+
+				daNotes = songData.notes;
+				daSong = songData.song;
+				daBpm = songData.bpm; */
+
+		var songJson:Dynamic = parseJSONshit(rawJson);
+		if(jsonInput != 'events') StageData.loadDirectory(songJson);
+		onLoadJson(songJson);
 		return songJson;
 	}
 
-
-	public static function parseJSON(rawData:String, ?nameForError:String = null, ?convertTo:String = 'psych_v1'):SwagSong
+	public static function parseJSONshit(rawJson:String):SwagSong
 	{
-		var songJson:SwagSong = cast Json.parse(rawData).song;
-		if(convertTo != null && convertTo.length > 0)
-		{
-			var fmt:String = songJson.format;
-			if(fmt == null) fmt = songJson.format = 'unknown';
-
-			switch(convertTo)
-			{
-				case 'psych_v1':
-					if(!fmt.startsWith('psych_v1')) //Convert to Psych 1.0 format
-					{
-						trace('converting chart $nameForError with format $fmt to psych_v1 format...');
-						songJson.format = 'psych_v1_convert';
-						convert(songJson);
-					}
-			}
-		}
-		return songJson;
+		return cast Json.parse(rawJson).song;
 	}
 }
