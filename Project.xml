@@ -96,6 +96,9 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="tjson" />
 	<haxelib name="json2object" />
+	<haxelib name="grig.audio" />
+	<haxelib name="funkin.vis" />
+	
 	
 
 	<!--Psych stuff needed-->
