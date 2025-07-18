@@ -1319,7 +1319,7 @@ if (#if MODS_ALLOWED FileSystem.exists(file) || #end OpenFlAssets.exists(file))
 			{
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % (SONG.mania + 1));
-				var gottaHitNote:Bool = (SONG.mania + 1));
+				var gottaHitNote:Bool = (SONG.mania + 1);
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
