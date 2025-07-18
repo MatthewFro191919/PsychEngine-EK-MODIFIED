@@ -386,7 +386,7 @@ class PlayState extends MusicBeatState
 			case 'school': new states.stages.School(); //Week 6 - Senpai, Roses
 			case 'schoolEvil': new states.stages.SchoolEvil(); //Week 6 - Thorns
 			case 'tank': new states.stages.Tank(); //Week 7 - Ugh, Guns, Stress
-		       // case 'phillyStreets': new states.stages.PhillyStreets(); remains unused for now
+		       case 'phillyStreets': new states.stages.PhillyStreets(); //weekend 1 UHHHHHH
 		}
 
 		if(isPixelStage) {
