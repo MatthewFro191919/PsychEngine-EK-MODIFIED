@@ -1302,8 +1302,17 @@ class PlayState extends MusicBeatState
 		notes = new FlxTypedGroup<Note>();
 		noteGroup.add(notes);
 
-		var file:String=Paths.getPath('data/$songName/events.json', TEXT);
-if (#if MODS_ALLOWED FileSystem.exists(file) || #end OpenFlAssets.exists(file))
+		var noteData:Array<SwagSection>;
+
+		// NEW SHIT
+		noteData = songData.notes;
+
+		var file:String = Paths.json(songName + '/events');
+		#if MODS_ALLOWED
+		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file))
+		#else
+		if (OpenFlAssets.exists(file))
+		#end
 		{
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
 			for (event in eventsData) //Event Notes
@@ -1311,23 +1320,32 @@ if (#if MODS_ALLOWED FileSystem.exists(file) || #end OpenFlAssets.exists(file))
 					makeEvent(event, i);
 		}
 
-		var oldNote:Note = null;
-		var sectionsData:Array<SwagSection> = PlayState.SONG.notes;
-		for (section in sectionsData)
+		for (section in noteData)
 		{
 			for (songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % (SONG.mania + 1));
-				var gottaHitNote:Bool = (SONG.mania + 1);
+				var gottaHitNote:Bool = section.mustHitSection;
+
+				if (songNotes[1] > SONG.mania)
+				{
+					gottaHitNote = !section.mustHitSection;
+				}
+
+				var oldNote:Note;
+				if (unspawnNotes.length > 0)
+					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				else
+					oldNote = null;
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
-				swagNote.gfNote = (section.gfSection && (songNotes[1]< (SONG.mania + 1)));
-				if(section.altAnim && !swagNote.mustPress && !section.gfSection) swagNote.animSuffix = '-alt';
+				swagNote.gfNote = (section.gfSection && (songNotes[1]<(SONG.mania + 1)));
 				swagNote.noteType = songNotes[3];
-				
+				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
+
 				swagNote.scrollFactor.set();
 
 				unspawnNotes.push(swagNote);
@@ -1335,16 +1353,14 @@ if (#if MODS_ALLOWED FileSystem.exists(file) || #end OpenFlAssets.exists(file))
 				final susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
 				final floorSus:Int = Math.floor(susLength);
 
-				if(floorSus > 0) 
-				{
+				if(floorSus > 0) {
 					for (susNote in 0...floorSus + 1)
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
-						sustainNote.animSuffix = swagNote.animSuffix;
-						sustainNote.mustPress = swagNote.mustPress;
-						sustainNote.gfNote = swagNote.gfNote;
+						sustainNote.mustPress = gottaHitNote;
+						sustainNote.gfNote = (section.gfSection && (songNotes[1]<(SONG.mania + 1)));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						sustainNote.parent = swagNote;
@@ -1393,10 +1409,9 @@ if (#if MODS_ALLOWED FileSystem.exists(file) || #end OpenFlAssets.exists(file))
 					}
 				}
 
-				if(!noteTypes.contains(swagNote.noteType)) 
+				if(!noteTypes.contains(swagNote.noteType)) {
 					noteTypes.push(swagNote.noteType);
-
-oldNote = swagNote;
+				}
 			}
 		}
 		for (event in songData.events) //Event Notes
@@ -1561,8 +1576,6 @@ oldNote = swagNote;
 
 		super.openSubState(SubState);
 	}
-	
-	var canResync:Bool = true;
 
 	override function closeSubState()
 	{
@@ -1571,7 +1584,7 @@ oldNote = swagNote;
 		stagesFunc(function(stage:BaseStage) stage.closeSubState());
 		if (paused)
 		{
-			if (FlxG.sound.music != null && !startingSong && canResync)
+			if (FlxG.sound.music != null && !startingSong)
 			{
 				resyncVocals();
 			}
@@ -1899,17 +1912,12 @@ oldNote = swagNote;
 
 	function openChartEditor()
 	{
-	  canResync = false;
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
-		chartingMode = true;
 		paused = true;
 		if(FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-		if(vocals != null)
-			vocals.pause();
-		if(opponentVocals != null)
-			opponentVocals.pause();
+		chartingMode = true;
 
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Chart Editor", null, null, true);
@@ -1921,17 +1929,11 @@ oldNote = swagNote;
 
 	function openCharacterEditor()
 	{
-	  canResync = false;
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
-		
 		if(FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-			if(vocals != null)
-			vocals.pause();
-		if(opponentVocals != null)
-			opponentVocals.pause();
 		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 	}
@@ -2385,8 +2387,6 @@ oldNote = swagNote;
 					Mods.loadTopMod();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
-					
-					canResync = false;
 
 					MusicBeatState.switchState(new StoryMenuState());
 
@@ -2413,8 +2413,6 @@ oldNote = swagNote;
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);
 					FlxG.sound.music.stop();
-					
-					canResync = false;
 
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
@@ -2424,8 +2422,6 @@ oldNote = swagNote;
 				trace('WENT BACK TO FREEPLAY??');
 				Mods.loadTopMod();
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
-				
-				canResync = false;
 
 				MusicBeatState.switchState(new FreeplayState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
@@ -2965,15 +2961,17 @@ oldNote = swagNote;
 		if (songName != 'tutorial')
 			camZooming = true;
 
-		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey'))
-		{
+		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
 			dad.heyTimer = 0.6;
-		}
+		} else if(!note.noAnimation) {
+			var altAnim:String = note.animSuffix;
 
-else if( !note.noAnimation) {
-  
+			if (SONG.notes[curSection] != null)
+				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection)
+					altAnim = '-alt';
+
 			var char:Character = dad;
 			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))] + note.animSuffix;
 			if(note.gfNote) char = gf;
