@@ -8,11 +8,11 @@
             		"url": "https://github.com/kittycathy233/hxcpp"
 		}, 
 		{
-    		"name": "funkin.vis",
-    		"type": "git",
-    		"dir": null,
-    		"ref": "22b1ce089dd924f15cdc4632397ef3504d464e90",
-    		"url": "https://github.com/FunkinCrew/funkVis"
+    		        "name": "funkin.vis",
+			"type": "git",
+			"dir": null,
+			"ref": "22b1ce089dd924f15cdc4632397ef3504d464e90",
+			"url": "https://github.com/FunkinCrew/funkVis"
    		},
    		{
 		      "name": "grig.audio",
@@ -101,27 +101,6 @@
 			"dir": null,
 			"ref": "70e7f5f3e76d526ac6fb8f0e6665efe7dfda589d",
 			"url": "https://github.com/MAJigsaw77/hxvlc"
-		},
-		{
-			"name": "funkin.vis",
-			"type": "git",
-			"dir": null,
-			"ref": "d5361037efa3a02c4ab20b5bd14ca11e7d00f519",
-			"url": "https://github.com/FunkinCrew/funkVis"
-		},
-		{
-			"name": "grig.audio",
-			"type": "git",
-			"dir": null,
-			"ref": "cbf91e2180fd2e374924fe74844086aab7891666",
-			"url": "https://gitlab.com/haxe-grig/grig.audio.git"
-		},
-		{
-			"name": "extension-androidtools",
-			"type": "git",
-			"dir": null,
-			"ref": "df9dfd0cda74e5460ae3afcfff1081c50959ed4a",
-			"url": "https://github.com/MAJigsaw77/extension-androidtools"
 		}
 	]
 }
