@@ -844,7 +844,6 @@ class PlayState extends MusicBeatState
 		{
 			var cutscene:VideoSprite = new VideoSprite(fileName, forMidSong, canSkip, loop);
 
-		var video:VideoHandler = new VideoHandler();
 			// Finish callback
 			if (!forMidSong)
 			{
