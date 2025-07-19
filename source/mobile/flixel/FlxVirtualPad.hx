@@ -269,6 +269,7 @@ enum FlxActionMode {
 	A;
 	B;
 	D;
+	E;
 	A_B;
 	B_X;
 	A_B_C;
