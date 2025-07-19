@@ -110,7 +110,7 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 			#if mobile
-		addVirtualPad(UP_DOWN, A_B_E);
+		addVirtualPad(NONE, E);
 		#end
 
 		#if ACHIEVEMENTS_ALLOWED
@@ -154,10 +154,10 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (controls.UI_UP_P #if mobile || _virtualpad.buttonUp.justPressed #end)
+			if (controls.UI_UP_P)
 				changeItem(-1);
 
-			if (controls.UI_DOWN_P #if mobile || _virtualpad.buttonDown.justPressed #end)
+			if (controls.UI_DOWN_P)
 				changeItem(1);
 
 			var allowMouse:Bool = allowMouse;
@@ -258,7 +258,7 @@ class MainMenuState extends MusicBeatState
 					}
 			}
 
-			if (controls.BACK #if mobile || _virtualpad.buttonB.justPressed #end)
+			if (controls.BACK)
 			{
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -336,7 +336,7 @@ class MainMenuState extends MusicBeatState
 				else CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
 			}
 			#if desktop
-			if (controls.justPressed('debug_1'))
+			if (controls.justPressed('debug_1') #if mobile || _virtualpad.buttonE.justPressed #end)
 			{
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
