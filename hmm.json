@@ -91,6 +91,13 @@
 			"url": "https://github.com/MAJigsaw77/hxdiscord_rpc"
 		},
 		{
+			"name": "discord_rpc",
+			"type": "git",
+			"dir": null,
+			"ref": "master",
+			"url": "https://github.com/Aidan63/linc_discord-rpc"
+		},
+		{
 			"name": "hxvlc",
 			"type": "git",
 			"dir": null,
