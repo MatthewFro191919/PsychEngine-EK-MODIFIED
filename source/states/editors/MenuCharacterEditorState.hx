@@ -63,9 +63,6 @@ class MenuCharacterEditorState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		updateCharTypeBox();
 
-		addVirtualPad(FULL, A_B_C);
-		_virtualpad.y = -300;
-
 		super.create();
 	}
 
