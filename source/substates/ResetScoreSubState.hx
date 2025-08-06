@@ -71,8 +71,6 @@ class ResetScoreSubState extends MusicBeatSubstate
 		noText.x += 200;
 		add(noText);
 
-		addVirtualPad(LEFT_RIGHT, A_B);
-
 		updateOptions();
 	}
 
