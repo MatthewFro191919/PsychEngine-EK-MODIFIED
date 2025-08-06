@@ -85,10 +85,8 @@
                 },
 		{
 			"name": "hxdiscord_rpc",
-			"type": "git",
-			"dir": null,
-			"ref": "2d83fa863ef0c1eace5f1cf67c3ac315d1a3a8a5",
-			"url": "https://github.com/Aidan63/linc_discord-rpc"
+			"type": "haxelib",
+			"version": "1.2.4"
 		},
 		{
 			"name": "hxvlc",
