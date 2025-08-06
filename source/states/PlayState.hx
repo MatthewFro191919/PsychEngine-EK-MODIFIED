@@ -564,9 +564,6 @@ class PlayState extends MusicBeatState
 		noteGroup.cameras = [camHUD];
 		comboGroup.cameras = [camHUD];
 
-		addHitbox(SONG.mania);
-		_hitbox.visible = false;
-
 		startingSong = true;
 
 		#if LUA_ALLOWED
