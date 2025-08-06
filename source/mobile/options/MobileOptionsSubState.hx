@@ -28,9 +28,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		option.onChange = () ->
-		{
-			_virtualpad.alpha = curOption.getValue();
-		};
+		{};
 		addOption(option);
 
 		#if mobile
@@ -100,3 +98,4 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		#end
 	}
 }
+
