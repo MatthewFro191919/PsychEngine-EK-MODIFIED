@@ -991,14 +991,6 @@ class CharacterEditorState extends MusicBeatState
 				changedOffset = true;
 			}
 		}
-		if (_virtualpad.buttonA.justPressed)
-		{
-			undoOffsets = [character.offset.x, character.offset.y];
-			character.offset.x = copiedOffset[0];
-			character.offset.y = copiedOffset[1];
-			changedOffset = true;
-		}
-
 		var anim = anims[curAnim];
 		if(changedOffset && anim != null && anim.offsets != null)
 		{
@@ -1067,20 +1059,6 @@ class CharacterEditorState extends MusicBeatState
 		{
 			helpBg.visible = !helpBg.visible;
 			helpTexts.visible = helpBg.visible;
-
-			_virtualpad.buttonLeft.visible = !helpBg.visible;
-			_virtualpad.buttonRight.visible = !helpBg.visible;
-			_virtualpad.buttonUp.visible = !helpBg.visible;
-			_virtualpad.buttonDown.visible = !helpBg.visible;
-			_virtualpad.buttonA.visible = !helpBg.visible;
-			_virtualpad.buttonB.visible = !helpBg.visible;
-			_virtualpad.buttonC.visible = !helpBg.visible;
-			_virtualpad.buttonD.visible = !helpBg.visible;
-            _virtualpad.buttonS.visible = !helpBg.visible;
-			_virtualpad.buttonZ.visible = !helpBg.visible;
-			_virtualpad.buttonY.visible = !helpBg.visible;
-			_virtualpad.buttonX.visible = !helpBg.visible;
-			_virtualpad.buttonV.visible = !helpBg.visible;
 		}
 		else if(FlxG.keys.justPressed.ESCAPE #if mobile || FlxG.android.justReleased.BACK #end)
 		{
