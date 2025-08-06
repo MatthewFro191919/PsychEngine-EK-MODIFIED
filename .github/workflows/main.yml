@@ -7,9 +7,9 @@ name: Build
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main, experimental ]
+    branches: [ extra-keys-1.0.4 ]
   pull_request:
-    branches: [ main, experimental ]
+    branches: [ extra-keys-1.0.4 ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -35,8 +35,8 @@ jobs:
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
           haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
+          haxelib install hmm --quiet
+          haxelib run hmm install --quiet
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
       - name: Create Version Tag
@@ -64,8 +64,8 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
+          haxelib install hmm --quiet
+          haxelib run hmm install --quiet
         shell: cmd
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
@@ -93,8 +93,8 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxe -cp ./setup -D analyzer-optimize -main Main --interp
+          haxelib install hmm --quiet
+          haxelib run hmm install --quiet
       - name: Skip SScript setup mode
         run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> ~/settings.cocoa
       - name: Create Version Tag
